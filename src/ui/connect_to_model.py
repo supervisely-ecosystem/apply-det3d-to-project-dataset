@@ -1,6 +1,6 @@
 import sly_globals as g
 import supervisely_lib as sly
-
+import model_classes
 
 def init(data, state):
     state["connectionLoading"] = False
@@ -46,4 +46,8 @@ def connect(api: sly.Api, task_id, context, state, app_logger):
         {"field": "data.modelInfo", "payload": g.model_info},
     ]
 
+    classes_rows = model_classes.generate_rows()
+    model_classes.fill_table(classes_rows)
+
     g.api.app.set_fields(g.task_id, fields)
+    g.finish_step(2)

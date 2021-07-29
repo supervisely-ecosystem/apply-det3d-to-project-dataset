@@ -5,6 +5,7 @@
         :collapsed.sync="state.collapsed2"
         :disabled="{disabled: state.disabled2, message: 'complete stage 1'}"
         ref="step2">
+
     <div v-if="data.connected === false">
         <div class="fflex">
             <sly-select-app-session :group-id="data.teamId"
