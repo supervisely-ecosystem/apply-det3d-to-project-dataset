@@ -1,0 +1,24 @@
+<div id="apply-det3d-to-project-dataset">
+    <sly-style>
+        <!-- Css styles here -->
+    </sly-style>
+
+    <sly-stepper :active="state.activeStep">
+        <sly-stepper-item>{% include '/apply-nn-det3d/src/ui/input_project.html' %}</sly-stepper-item>
+
+    </sly-stepper>
+
+    <el-dialog
+            title="Restart from this step"
+            :visible.sync="state.restartFrom"
+            size="tiny">
+        <span>This step and all next steps will be reseted</span>
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="state.restartFrom = null">Cancel</el-button>
+            <el-button type="primary" class="regular"
+                       @click="command('restart');">
+                Confirm
+            </el-button>
+        </span>
+    </el-dialog>
+</div>

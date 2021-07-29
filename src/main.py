@@ -16,6 +16,5 @@ def main():
 
     g.my_app.run(data=data, state=state)
 
-
 if __name__ == "__main__":
     sly.main_wrapper("main", main)
