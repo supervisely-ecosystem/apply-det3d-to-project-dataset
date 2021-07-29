@@ -1,9 +1,9 @@
 import supervisely_lib as sly
 import sly_globals as g
 
-import input_project, connect_to_model, model_classes
+import input_project, connect_to_model, model_classes, parameters
 
-stages = [input_project, connect_to_model, model_classes]
+stages = [input_project, connect_to_model, model_classes, parameters]
 
 @sly.timeit
 def init(data, state):
@@ -36,11 +36,11 @@ def restart(api: sly.Api, task_id, context, state, app_logger):
                 model_classes.restart(data, state)
             else:
                 model_classes.init(data, state)
-        # if restart_from_step <= 4:
-        #     if restart_from_step == 4:
-        #         parameters.restart(data, state)
-        #     else:
-        #         parameters.init(data, state)
+        if restart_from_step <= 4:
+            if restart_from_step == 4:
+                parameters.restart(data, state)
+            else:
+                parameters.init(data, state)
 
         fields = [
             {"field": "data", "payload": data, "append": True, "recursive": False},
