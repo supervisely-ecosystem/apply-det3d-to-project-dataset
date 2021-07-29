@@ -1,9 +1,11 @@
 import supervisely_lib as sly
 import sly_globals as g
+
 import input_project
+import connect_to_model
 
+stages = [input_project, connect_to_model]
 
-stages = [input_project]
 #stages = [input_project, connect_to_model, choose_classes, apply]
 
 @sly.timeit
