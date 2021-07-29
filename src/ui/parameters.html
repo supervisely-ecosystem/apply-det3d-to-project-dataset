@@ -12,7 +12,8 @@
                        description="Project name to store inference result">
                 <el-input placeholder="Labeled project name"
                           v-model="state.expId"
-                          :disabled="data.done4"></el-input>
+                          :disabled="data.done4"
+                          style="width: 250px;"></el-input>
             </sly-field>
 
 
@@ -23,7 +24,17 @@
                                      :disabled="data.done4"></el-input-number>
                 </div>
             </sly-field>
-        </div>
+
+
+
+
+            <sly-field title="How to add predictions"
+                   description="Original annotations are not modified. New project with predictions will be created.">
+                <el-select v-model="state.addMode" style="width: 250px;" :disabled="data.done4" >
+                    <el-option key="merge" label="merge with existing labels" value="merge"></el-option>
+                    <el-option key="replace" label="replace existing labels" value="replace"></el-option>
+                </el-select>
+            </sly-field>
 
 
     <el-button type="primary" class="regular mt10"
