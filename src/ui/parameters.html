@@ -1,0 +1,58 @@
+<sly-card title="Parameters"
+          subtitle="Set inference and saving parameters"
+          class="mr15 "
+          :class="{'custom-full-height': !state.collapsed4}"
+          :options="{collapsable: true}"
+          :collapsed.sync="state.collapsed4"
+          :disabled="{disabled: state.disabled4, message: 'complete stage 3'}"
+          ref="step4">
+
+        <div>
+            <sly-field title="Output project name"
+                       description="Project name to store inference result">
+                <el-input placeholder="Labeled project name"
+                          v-model="state.newProjName"
+                          :disabled="data.done4"
+                          style="width: 250px;"></el-input>
+            </sly-field>
+
+
+            <sly-field title="Confidence threshold"
+                       description="to filter predictions">
+                <div class="fflex">
+                    <el-input-number v-model="state.confThres" :min="0" :max="1" :step="0.1"
+                                     :disabled="data.done4"></el-input-number>
+                </div>
+            </sly-field>
+
+
+
+
+            <sly-field title="How to add predictions"
+                   description="Original annotations are not modified. New project with predictions will be created.">
+                <el-select v-model="state.addMode" style="width: 250px;" :disabled="data.done4" >
+                    <el-option key="merge" label="merge with existing labels" value="merge"></el-option>
+                    <el-option key="replace" label="replace existing labels" value="replace"></el-option>
+                </el-select>
+            </sly-field>
+
+
+    <el-button type="primary" class="regular mt10"
+               @click="command('apply_parameters')"
+               v-if="!data.done4">
+        Apply settings
+    </el-button>
+
+
+
+    <div v-if="data.done4">
+        <i class="zmdi zmdi-check-circle mr5 mt5 mb5" style="color: #13ce66"></i>
+        <span style="color: #5a6772;">Parameters defined</span>
+    </div>
+    <el-button type="warning" class="regular mt10" :plain="true"
+               @click="state.restartFrom = 4;"
+               v-if="data.done4"
+               :disabled="state.visualizingStarted">
+        <i class="zmdi zmdi-rotate-left mr5"></i> reselect
+    </el-button>
+</sly-card>
