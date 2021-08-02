@@ -3,7 +3,7 @@ import sly_globals as g
 
 
 def init(data, state):
-    state["expId"] = f"{g.project_info.name} labeled"
+    state["newProjName"] = f"{g.project_info.name} labeled"
     state["confThres"] = 0.4
     state["addMode"] = "merge"
     state["collapsed4"] = True
