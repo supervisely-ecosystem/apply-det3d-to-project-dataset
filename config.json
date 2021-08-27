@@ -6,9 +6,9 @@
     "pointcloud"
   ],
   "description": "NN Inference 3D Det on pointcloud in project or dataset",
-  "docker_image": "supervisely/base-py-sdk:6.1.92",
-  "main_script": "/src/main.py",
-  "gui_template": "/src/gui.html",
+  "docker_image": "supervisely/base-py-sdk:6.1.94",
+  "main_script": "src/main.py",
+  "gui_template": "src/gui.html",
 
   "task_location": "workspace_tasks",
   "isolate": true,
