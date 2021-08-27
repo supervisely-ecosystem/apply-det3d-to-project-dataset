@@ -7,16 +7,17 @@ my_app = sly.AppService()
 api = my_app.public_api
 task_id = my_app.task_id
 
-root_source_path = str(pathlib.Path(sys.argv[0]).parents[2])
+root_source_path = str(pathlib.Path(os.path.abspath(sys.argv[0])).parents[1])
 sly.logger.info(f"Root source directory: {root_source_path}")
 sys.path.append(root_source_path)
+
 source_path = str(pathlib.Path(sys.argv[0]).parents[0])
 sly.logger.info(f"App source directory: {source_path}")
 sys.path.append(source_path)
+
 ui_sources_dir = os.path.join(source_path, "ui")
 sly.logger.info(f"UI source directory: {ui_sources_dir}")
 sys.path.append(ui_sources_dir)
-sly.logger.info(f"Added to sys.path: {ui_sources_dir}")
 
 owner_id = int(os.environ['context.userId'])
 team_id = int(os.environ['context.teamId'])
