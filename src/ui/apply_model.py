@@ -1,5 +1,3 @@
-
-#
 import supervisely_lib as sly
 import sly_globals as g
 
