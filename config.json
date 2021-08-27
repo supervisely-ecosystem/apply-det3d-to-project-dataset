@@ -5,7 +5,7 @@
     "neural network",
     "pointcloud"
   ],
-  "description": "NN Inference 3D Det on pointcloud in project or dataset",
+  "description": "NN Inference 3D Det on pointcloud in projeсt",
   "docker_image": "supervisely/base-py-sdk:6.1.94",
   "main_script": "src/main.py",
   "gui_template": "src/gui.html",
@@ -18,7 +18,7 @@
   "icon_background": "#FFFFFF",
 
   "context_menu": {
-    "target": ["pointcloud_project", "pointcloud_dataset"],
+    "target": ["point_cloud_project"],
     "context_root": "Neural Networks"
   }
 }
