@@ -4,11 +4,11 @@
     </sly-style>
 
     <sly-stepper :active="state.activeStep">
-        <sly-stepper-item>{% include '/apply-nn-det3d/src/ui/input_project.html' %}</sly-stepper-item>
-        <sly-stepper-item>{% include '/apply-nn-det3d/src/ui/connect_to_model.html' %}</sly-stepper-item>
-        <sly-stepper-item>{% include '/apply-nn-det3d/src/ui/model_classes.html' %}</sly-stepper-item>
-        <sly-stepper-item>{% include '/apply-nn-det3d/src/ui/parameters.html' %}</sly-stepper-item>
-        <sly-stepper-item>{% include '/apply-nn-det3d/src/ui/apply_model.html' %}</sly-stepper-item>
+        <sly-stepper-item>{% include 'src/ui/input_project.html' %}</sly-stepper-item>
+        <sly-stepper-item>{% include 'src/ui/connect_to_model.html' %}</sly-stepper-item>
+        <sly-stepper-item>{% include 'src/ui/model_classes.html' %}</sly-stepper-item>
+        <sly-stepper-item>{% include 'src/ui/parameters.html' %}</sly-stepper-item>
+        <sly-stepper-item>{% include 'src/ui/apply_model.html' %}</sly-stepper-item>
     </sly-stepper>
 
     <el-dialog
