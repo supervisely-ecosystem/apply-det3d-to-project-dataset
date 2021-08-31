@@ -8,13 +8,9 @@
       ref="step5">
 
 
-<el-button type="primary" v-if="!data.started"  @click="data.started = true; command('apply_model')">
+<el-button type="primary" :loading="!!data.started" v-if="!data.done5 && !data.resProjectId" @click="data.started = true; command('apply_model')">
     <i class="zmdi zmdi-fire" style="margin-right: 5px"></i> Apply model to input data
 </el-button>
-<div class="fflex" v-if="data.started === true">
-    <el-progress :percentage="data.progress" style="flex: 1"></el-progress>
-    <div class="ml10" style="flex: none;">[{{data.progressCurrent}} / {{data.progressTotal}}]</div>
-</div>
 
 <sly-field v-if="data.resProjectId" title="" description="Project">
     <a slot="title" target="_blank"
