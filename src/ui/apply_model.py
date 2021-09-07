@@ -32,8 +32,12 @@ def apply_model(api: sly.Api, task_id, context, state, app_logger):
               "threshold": state["confThres"]}
 
     new_annotations = g.api.task.send_request(state['sessionId'], "inference_pointcloud_ids", data=params)
-    new_annotations = new_annotations["results"]
 
+    try:
+        new_annotations = new_annotations["results"]
+    except KeyError:
+        sly.logger.error("Something goes wrong and responce doesnt contain results")
+        sly.logger.error("ANNS:", params=new_annotations)
     # update meta
     if state["addMode"] == "merge":
         res_project_meta = g.project_meta.merge(g.model_meta)
