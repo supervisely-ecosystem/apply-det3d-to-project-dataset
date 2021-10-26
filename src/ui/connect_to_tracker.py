@@ -4,7 +4,7 @@ import supervisely_lib as sly
 
 def init(data, state):
     data["ssTrackerOptions"] = {
-        "sessionTags": ["deployed_nn"],
+        "sessionTags": ["sly_3d_tracking"],
         "showLabel": False,
         "size": "small"
     }
