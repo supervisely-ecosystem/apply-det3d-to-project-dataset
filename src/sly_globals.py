@@ -23,7 +23,6 @@ owner_id = int(os.environ['context.userId'])
 team_id = int(os.environ['context.teamId'])
 project_id = int(os.environ['modal.state.slyProjectId'])
 workspace_id = int(os.environ['context.workspaceId'])
-tracker_task_id = int(os.environ['modal.state.trackerTaskId'])
 
 project_info = api.project.get_info_by_id(project_id)
 if project_info is None:  # for debug
