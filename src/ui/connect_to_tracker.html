@@ -1,0 +1,15 @@
+<sly-card
+        title="Tracker"
+        subtitle="(OPTIONAL) Connect to deployed tracker"
+        :options="{collapsable: true}"
+        :collapsed.sync="state.collapsed5"
+        :disabled="{disabled: state.disabled5, message: 'complete stage 4'}"
+        ref="step5">
+
+        <div class="fflex">
+            <sly-select-app-session :group-id="data.teamId"
+                                    :app-session-id.sync="state.trackerSessionId"
+                                    :options="data.ssTrackerOptions">
+            </sly-select-app-session>
+        </div>
+</sly-card>

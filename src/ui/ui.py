@@ -1,13 +1,16 @@
 import sly_globals as g
 import supervisely_lib as sly
 
+
+import apply_tracker
+import connect_to_tracker
 import apply_model
 import connect_to_model
 import input_project
 import model_classes
 import parameters
 
-stages = [input_project, connect_to_model, model_classes, parameters, apply_model]
+stages = [input_project, connect_to_model, model_classes, parameters, connect_to_tracker, apply_model, apply_tracker]
 
 
 @sly.timeit

@@ -3,9 +3,9 @@ import sly_globals as g
 
 
 def init(data, state):
-    state["collapsed5"] = True
-    state["disabled5"] = True
-    data["done5"] = False
+    state["collapsed6"] = True
+    state["disabled6"] = True
+    data["done6"] = False
 
     data["resProjectId"] = None
     data["resProjectName"] = None
@@ -58,8 +58,7 @@ def apply_model(api: sly.Api, task_id, context, state, app_logger):
         {"field": "data.resProjectId", "payload": new_project.id},
         {"field": "data.resProjectName", "payload": new_project.name},
         {"field": "data.started", "payload": False},
-        {"field": "data.done5", "payload": True}
     ]
     api.task.set_fields(task_id, fields)
     api.task.set_output_project(task_id, new_project.id, new_project.name)
-    g.my_app.stop()
+

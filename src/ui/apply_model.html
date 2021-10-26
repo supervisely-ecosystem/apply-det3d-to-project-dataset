@@ -5,14 +5,18 @@
       :options="{collapsable: true}"
       :collapsed.sync="state.collapsed5"
       :disabled="{disabled: state.disabled5, message: 'complete stage 4'}"
-      ref="step5">
+      ref="step6">
 
 
-<el-button type="primary" :loading="!!data.started" v-if="!data.done5 && !data.resProjectId" @click="data.started = true; command('apply_model')">
+<el-button type="primary" :loading="!!data.started" v-if="!data.done6 && !data.resProjectId" @click="data.started = true; command('apply_model')">
     <i class="zmdi zmdi-fire" style="margin-right: 5px"></i> Apply model to input data
 </el-button>
 
-<sly-field v-if="data.resProjectId" title="" description="Project">
+<el-button type="primary" style="margin-bottom: 20px;" :loading="!!data.started" v-if="data.resProjectId && !data.done6" @click="data.started = true; command('apply_tracking')">
+    <i class="zmdi zmdi-fire" style="margin-right: 5px;"></i> Track objects
+</el-button>
+
+<sly-field v-if="data.resProjectId && !data.started" title="" description="Project">
     <a slot="title" target="_blank"
        :href="`/projects/${data.resProjectId}/datasets`">{{data.resProjectName}}</a>
     <sly-icon slot="icon" :options="{ imageUrl: `${data.resProjectPreviewUrl}` }"/>
