@@ -14,6 +14,7 @@ def init(data, state):
 
 @g.my_app.callback("apply_model")
 @sly.timeit
+@g.my_app.ignore_errors_and_show_dialog_window()
 def apply_model(api: sly.Api, task_id, context, state, app_logger):
 
     # Setup new project
@@ -31,7 +32,8 @@ def apply_model(api: sly.Api, task_id, context, state, app_logger):
     params = {"pointcloud_ids": [p.id for p in pointclouds],
               "threshold": state["confThres"]}
 
-    new_annotations = g.api.task.send_request(state['sessionId'], "inference_pointcloud_ids", data=params)
+    timeout = 60 * 5 # 5 min
+    new_annotations = g.api.task.send_request(state['sessionId'], "inference_pointcloud_ids", data=params, timeout=timeout)
 
     try:
         new_annotations = new_annotations["results"]
@@ -43,7 +45,7 @@ def apply_model(api: sly.Api, task_id, context, state, app_logger):
         res_project_meta = g.project_meta.merge(g.model_meta)
     elif state["addMode"] == "replace":
         res_project_meta = g.model_meta
-        api.project.update_meta(new_project.id, sly.ProjectMeta)
+        api.project.update_meta(new_project.id, sly.ProjectMeta().to_json())
     else:
         raise ValueError("Wrong add mode")
 

@@ -1,1 +1,6 @@
 secret_debug.env
+cache
+data
+.vscode
+src/__pycache__
+src/ui/__pycache__

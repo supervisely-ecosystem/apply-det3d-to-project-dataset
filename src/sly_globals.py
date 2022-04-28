@@ -1,11 +1,9 @@
 import os
 import sys
 import pathlib
-import supervisely_lib as sly
-
-my_app = sly.AppService()
-api = my_app.public_api
-task_id = my_app.task_id
+import supervisely as sly
+from supervisely.app.v1.app_service import AppService
+from dotenv import load_dotenv
 
 root_source_path = str(pathlib.Path(os.path.abspath(sys.argv[0])).parents[1])
 sly.logger.info(f"Root source directory: {root_source_path}")
@@ -19,16 +17,26 @@ ui_sources_dir = os.path.join(source_path, "ui")
 sly.logger.info(f"UI source directory: {ui_sources_dir}")
 sys.path.append(ui_sources_dir)
 
-owner_id = int(os.environ['context.userId'])
+# @TODO: for debug
+debug_env_path = os.path.join(root_source_path, "debug.env")
+secret_debug_env_path = os.path.join(root_source_path, "secret_debug.env")
+load_dotenv(debug_env_path)
+load_dotenv(secret_debug_env_path, override=True)
+
+# owner_id = int(os.environ['context.userId'])
 team_id = int(os.environ['context.teamId'])
 project_id = int(os.environ['modal.state.slyProjectId'])
 workspace_id = int(os.environ['context.workspaceId'])
+
+my_app = AppService()
+api = my_app.public_api
+task_id = my_app.task_id
 
 project_info = api.project.get_info_by_id(project_id)
 if project_info is None:  # for debug
     raise ValueError(f"Project with id={project_id} not found")
 
-project_meta: sly.ProjectMeta = sly.ProjectMeta.from_json(my_app.public_api.project.get_meta(project_id))
+project_meta: sly.ProjectMeta = sly.ProjectMeta.from_json(api.project.get_meta(project_id))
 
 model_info = None
 model_meta: sly.ProjectMeta = None
