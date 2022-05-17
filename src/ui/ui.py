@@ -1,5 +1,5 @@
 import sly_globals as g
-import supervisely_lib as sly
+import supervisely as sly
 
 import apply_model
 import connect_to_model

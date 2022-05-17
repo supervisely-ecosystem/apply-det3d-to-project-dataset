@@ -6,15 +6,42 @@
       :collapsed.sync="state.collapsed5"
       :disabled="{disabled: state.disabled5, message: 'complete stage 4'}"
       ref="step5">
+      
+    <sly-field title="Choose problem to solve">
+        <div><el-radio v-model="state.task" label="det">Detection</el-radio></div>
+        <div><el-radio :disabled="data.projectType == 'point_clouds'" v-model="state.task" label="det_and_track">Detection and Tracking</el-radio></div>
+    </sly-field>
 
+    <sly-field title="Tracking algorithm" v-if="state.task == 'det_and_track'">
+        <el-select v-model="state.tracking" style="width: 250px;" :disabled="!data.done5" >
+            <el-option key="CenterTrack" label="CenterTrack" value="CenterTrack"></el-option>
+        </el-select>
+    </sly-field>
 
-<el-button type="primary" :loading="!!data.started" v-if="!data.done5 && !data.resProjectId" @click="data.started = true; command('apply_model')">
-    <i class="zmdi zmdi-fire" style="margin-right: 5px"></i> Apply model to input data
-</el-button>
+    <el-button 
+        type="primary"
+        class="mb10"
+        :loading="!!data.started" 
+        v-if="!data.done5 && !data.resProjectId" 
+        @click="data.started = true; command('apply_model')"
+    >
+        <i class="zmdi zmdi-fire" style="margin-right: 5px"></i> Apply model to input data
+    </el-button>
 
-<sly-field v-if="data.resProjectId" title="" description="Project">
-    <a slot="title" target="_blank"
-       :href="`/projects/${data.resProjectId}/datasets`">{{data.resProjectName}}</a>
-    <sly-icon slot="icon" :options="{ imageUrl: `${data.resProjectPreviewUrl}` }"/>
-</sly-field>
+    <div class="fflex" v-if="data.started">
+        <div style="color: #20a0ff" class="mr5">
+            Object detection from point clouds: 
+        </div>
+        <el-progress :percentage="data.progressInference" style="flex: 1"></el-progress>
+        <div class="ml10" style="flex: none;">[{{data.progressCurrentInference}} / {{data.progressTotalInference}}]</div>
+    </div>
+    <div class="mt10" style="color: #20a0ff" v-if="state.uploading">
+        Uploading annotations to Supervisely...
+    </div>
+
+    <sly-field v-if="data.resProjectId" title="" description="Project">
+        <a slot="title" target="_blank"
+        :href="`/projects/${data.resProjectId}/datasets`">{{data.resProjectName}}</a>
+        <sly-icon slot="icon" :options="{ imageUrl: `${data.resProjectPreviewUrl}` }"/>
+    </sly-field>
 </sly-card>

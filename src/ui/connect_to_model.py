@@ -1,5 +1,5 @@
 import sly_globals as g
-import supervisely_lib as sly
+import supervisely as sly
 import model_classes
 
 def init(data, state):
@@ -33,6 +33,9 @@ def connect(api: sly.Api, task_id, context, state, app_logger):
         meta_json = g.api.task.send_request(state['sessionId'], "get_output_classes_and_tags", data={}) # TODO: timeouts (git pull)
         g.model_info = g.api.task.send_request(state['sessionId'], "get_session_info", data={})
         g.model_meta = sly.ProjectMeta.from_json(meta_json)
+        labels = [model_class.name for model_class in g.model_meta.obj_classes]
+        g.gt_index_to_labels = dict(enumerate(labels))
+        g.gt_labels = {v: k for k, v in g.gt_index_to_labels.items()}
     except Exception as ex:
         fields = [
             {"field": "state.connectionLoading", "payload": False},

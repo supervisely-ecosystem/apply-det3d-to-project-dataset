@@ -32,6 +32,9 @@ my_app = AppService()
 api = my_app.public_api
 task_id = my_app.task_id
 
+# @TODO: for debug
+sly.fs.clean_dir(my_app.data_dir)
+
 project_info = api.project.get_info_by_id(project_id)
 if project_info is None:  # for debug
     raise ValueError(f"Project with id={project_id} not found")
