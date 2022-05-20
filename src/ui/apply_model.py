@@ -139,28 +139,26 @@ def apply_model(api: sly.Api, task_id, context, state, app_logger):
     
     new_project = api.project.get_info_by_name(g.workspace_id, new_project_name)
     new_dataset = api.dataset.get_list(new_project.id)[0] # TODO: only first dataset?
+    
+    # ann_json = api.pointcloud_episode.annotation.download(base_dataset.id)
+    # ann = sly.PointcloudEpisodeAnnotation.from_json(ann_json, g.project_meta, KeyIdMap())
+    # new_ann = ann.clone()
 
+    
+    pointclouds = api.pointcloud.get_list(new_dataset.id)
+    names_to_ptcs = {ptc.name : ptc.id for ptc in pointclouds}
+    names_to_ptcs = OrderedDict(names_to_ptcs.items())
+    names_to_ptcs = OrderedDict(sorted(names_to_ptcs.items(), key=lambda t: t[0]))
+    names_to_ptcs = OrderedDict(sorted(names_to_ptcs.items(), key=lambda t: t[0]))
     if new_project.type == "point_cloud_episodes":
-        frames_to_names = api.pointcloud_episode.get_frame_name_map(base_dataset.id)
-        names_to_frames = {v: k for k, v in frames_to_names.items()}
-        pointclouds = api.pointcloud_episode.get_list(new_dataset.id)
-        #frames_to_ptcs = {ptc.name : ptc.id for ptc in pointclouds}
-        frames_to_ptcs = {names_to_frames[ptc.name] : ptc.id for ptc in pointclouds}
-        frames_to_ptcs = OrderedDict(frames_to_ptcs.items())
-        frames_to_ptcs = OrderedDict(sorted(frames_to_ptcs.items(), key=lambda t: t[0]))
+        frames_to_ptcs = OrderedDict({i: v for i, v in enumerate(names_to_ptcs.values())})
         ptcs_to_frames = OrderedDict({v: k for k, v in frames_to_ptcs.items()})
-        #frames_to_ptcs = OrderedDict({i: v for i, (k, v) in enumerate(frames_to_ptcs.items())})
-        pointcloud_ids = list(frames_to_ptcs.values())
-    elif new_project.type == "point_clouds":
-        # TODO: not stable order!
-        pointclouds = api.pointcloud.get_list(new_dataset.id)
-        pointcloud_ids = [ptc.id for ptc in pointclouds]
+    pointcloud_ids = list(names_to_ptcs.values())
 
-    # uploaded_objects = KeyIdMap()
-    #api.pointcloud_episode.annotation.append(new_dataset.id,
-    #                                            ann,
-    #                                            frames_to_ptcs,
-    #                                            uploaded_objects)
+    # api.pointcloud_episode.annotation.append(new_dataset.id,
+    #                                             new_ann,
+    #                                             frames_to_ptcs,
+    #                                             KeyIdMap())
 
     # update meta
     if state["addMode"] == "merge":
@@ -182,7 +180,7 @@ def apply_model(api: sly.Api, task_id, context, state, app_logger):
             "classes": state["selectedClasses"],
             "project_type": new_project.type
         }
-        result = g.api.task.send_request(state['sessionId'], "inference_pointcloud_id", data=params)
+        result = g.api.task.send_request(state['sessionId'], "inference_pointcloud_id", data=params, timeout=120)
         try:
             result = result["results"]
         except KeyError:
@@ -221,6 +219,7 @@ def apply_model(api: sly.Api, task_id, context, state, app_logger):
             if state["addMode"] == "merge":
                 ann_json = api.pointcloud_episode.annotation.download(base_dataset.id)
                 ann = sly.PointcloudEpisodeAnnotation.from_json(ann_json, res_project_meta, KeyIdMap())
+                # TODO: not correct object-figures matching
                 objects.extend([obj for obj in ann.objects])
                 for frame in ann.frames:
                     previous_figures[frame.index] = frame.figures
@@ -244,6 +243,7 @@ def apply_model(api: sly.Api, task_id, context, state, app_logger):
             tracking_preds = track(raw_results)
             objects, figures = get_objects_and_figures(tracking_preds, res_project_meta)
             if state["addMode"] == "merge":
+                # TODO: not correct object-figures matching
                 ann_json = api.pointcloud_episode.annotation.download(base_dataset.id)
                 ann = sly.PointcloudEpisodeAnnotation.from_json(ann_json, res_project_meta, KeyIdMap())
                 objects.extend([obj for obj in ann.objects])
