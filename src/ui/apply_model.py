@@ -144,7 +144,6 @@ def apply_model(api: sly.Api, task_id, context, state, app_logger):
     # ann = sly.PointcloudEpisodeAnnotation.from_json(ann_json, g.project_meta, KeyIdMap())
     # new_ann = ann.clone()
 
-    
     pointclouds = api.pointcloud.get_list(new_dataset.id)
     names_to_ptcs = {ptc.name : ptc.id for ptc in pointclouds}
     names_to_ptcs = OrderedDict(names_to_ptcs.items())
@@ -199,6 +198,7 @@ def apply_model(api: sly.Api, task_id, context, state, app_logger):
             objects = []
             figures = []
             if state["addMode"] == "merge":
+                # TODO: check! (there was bug here)
                 ann_json = api.pointcloud.annotation.download(ptc_id)
                 ann = sly.PointcloudAnnotation.from_json(ann_json, res_project_meta)
                 objects.extend([obj for obj in ann.objects])
@@ -219,7 +219,6 @@ def apply_model(api: sly.Api, task_id, context, state, app_logger):
             if state["addMode"] == "merge":
                 ann_json = api.pointcloud_episode.annotation.download(base_dataset.id)
                 ann = sly.PointcloudEpisodeAnnotation.from_json(ann_json, res_project_meta, KeyIdMap())
-                # TODO: not correct object-figures matching
                 objects.extend([obj for obj in ann.objects])
                 for frame in ann.frames:
                     previous_figures[frame.index] = frame.figures
@@ -243,7 +242,6 @@ def apply_model(api: sly.Api, task_id, context, state, app_logger):
             tracking_preds = track(raw_results)
             objects, figures = get_objects_and_figures(tracking_preds, res_project_meta)
             if state["addMode"] == "merge":
-                # TODO: not correct object-figures matching
                 ann_json = api.pointcloud_episode.annotation.download(base_dataset.id)
                 ann = sly.PointcloudEpisodeAnnotation.from_json(ann_json, res_project_meta, KeyIdMap())
                 objects.extend([obj for obj in ann.objects])
