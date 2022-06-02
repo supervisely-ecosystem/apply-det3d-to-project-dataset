@@ -33,8 +33,8 @@ Application key points:
 
 # Usage
 
-<a data-key="sly-embeded-video-link" href="https://youtu.be/BZeOsvLc83k" data-video-code="BZeOsvLc83k">
-    <img src="https://github.com/supervisely-ecosystem/apply-det-and-cls-models-to-project/releases/download/v0.0.1/youtube-image.png" alt="SLY_EMBEDED_VIDEO_LINK"  style="max-width:50%;">
+<a data-key="sly-embeded-video-link" href="https://youtu.be/QThlasFmEUA" data-video-code="QThlasFmEUA">
+    <img src="https://github.com/supervisely-ecosystem/apply-det3d-to-project-dataset/releases/download/v0.0.1/youtube-image.png" alt="SLY_EMBEDED_VIDEO_LINK"  style="max-width:50%;">
 </a>
 
 
