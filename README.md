@@ -60,4 +60,4 @@ Application key points:
 
 # Screenshot
 
-<img src="" style="width: 100%;"/>
+<img src="https://github.com/supervisely-ecosystem/apply-det3d-to-project-dataset/releases/download/v0.0.1/app_ui_screenshot.png" style="width: 100%;"/>
