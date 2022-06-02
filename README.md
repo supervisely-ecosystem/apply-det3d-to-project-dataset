@@ -1,6 +1,6 @@
 <div align="center" markdown>
 
-<img src="" style="width: 100%;"/>
+<img src="https://github.com/supervisely-ecosystem/apply-det3d-to-project-dataset/releases/download/v0.0.1/poster.png" style="width: 100%;"/>
 
 # Apply 3D Detection to Pointcloud Project
 
@@ -44,19 +44,19 @@ Application key points:
 
 **Step 1.** Add [Apply 3D Detection to Pointcloud Project](https://ecosystem.supervise.ly/apps/supervisely-ecosystem/apply-det3d-to-project-dataset) application to your Team
 
-<img data-key="sly-module-link" data-module-slug="supervisely-ecosystem/apply-det-and-cls-models-to-project" src="" width="550px"/>
+<img data-key="sly-module-link" data-module-slug="supervisely-ecosystem/apply-det-and-cls-models-to-project" src="https://github.com/supervisely-ecosystem/apply-det3d-to-project-dataset/releases/download/v0.0.1/thumb.png" width="550px"/>
 
-**Step 2.** Launch from Images Project's context menu
+**Step 2.** Launch from Pointcloud Project's context menu
 
-<img src="" style="width: 100%;"/>
+<img src="https://github.com/supervisely-ecosystem/apply-det3d-to-project-dataset/releases/download/v0.0.1/runapp.png" style="width: 100%;"/>
 
 **Step 3.** Press the Run button in the modal window
 
-<img src="" style="width: 70%;"/>
+<img src="https://github.com/supervisely-ecosystem/apply-det3d-to-project-dataset/releases/download/v0.0.1/modal.png" style="width: 70%;"/>
 
 # Result
 
-<img src="" style="width: 100%;"/>
+<img src="https://github.com/supervisely-ecosystem/apply-det3d-to-project-dataset/releases/download/v0.0.1/result.png" style="width: 100%;"/>
 
 # Screenshot
 
