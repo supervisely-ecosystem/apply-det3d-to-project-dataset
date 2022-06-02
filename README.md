@@ -2,7 +2,7 @@
 
 <img src="" style="width: 100%;"/>
 
-# Apply Detection 3D to Pointcloud Project
+# Apply 3D Detection to Pointcloud Project
 
 <p align="center">
   <a href="#Overview">Overview</a> •
@@ -42,7 +42,7 @@ Application key points:
 # How To Run
 **Step 0.** Please make sure that you deployed 3d detection model using corresponding serving app. Learn more in ecosystem…
 
-**Step 1.** Add [Apply Detection 3D to Pointcloud Project](https://ecosystem.supervise.ly/apps/supervisely-ecosystem/apply-det-and-cls-models-to-project) application to your Team
+**Step 1.** Add [Apply 3D Detection to Pointcloud Project](https://ecosystem.supervise.ly/apps/supervisely-ecosystem/apply-det3d-to-project-dataset) application to your Team
 
 <img data-key="sly-module-link" data-module-slug="supervisely-ecosystem/apply-det-and-cls-models-to-project" src="" width="550px"/>
 
