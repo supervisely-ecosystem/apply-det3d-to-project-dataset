@@ -24,11 +24,11 @@
 
 # Overview
 
-Application allows you to label project's pointclouds using 3d detection model.
+This app provides convenient inference interface for 3d neural networks on pointclouds. Just connect to your deployed model, select model classes and model predictions will be saved to a new project. 
 
 Application key points:
 
-- Works with pointcloud episodes
+- Works with both separate pointclouds and pointcloud episodes
 - Suport 3d tracking
 
 # Usage
@@ -40,7 +40,7 @@ Application key points:
 
 
 # How To Run
-**Step 0.** Please make sure that you deployed 3d detection model using corresponding serving app. Learn more in ecosystem…
+**Step 0.** Please make sure that you deployed 3d detection model using corresponding serving app. Learn more in ecosystem …
 
 **Step 1.** Add [Apply 3D Detection to Pointcloud Project](https://ecosystem.supervise.ly/apps/supervisely-ecosystem/apply-det3d-to-project-dataset) application to your Team
 
