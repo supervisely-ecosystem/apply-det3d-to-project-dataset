@@ -32,6 +32,7 @@ def connect(api: sly.Api, task_id, context, state, app_logger):
     try:
         meta_json = g.api.task.send_request(state['sessionId'], "get_output_classes_and_tags", data={})
         g.model_info = g.api.task.send_request(state['sessionId'], "get_session_info", data={})
+
         g.model_meta = sly.ProjectMeta.from_json(meta_json)
         labels = [model_class.name for model_class in g.model_meta.obj_classes]
         g.gt_index_to_labels = dict(enumerate(labels))
@@ -46,7 +47,7 @@ def connect(api: sly.Api, task_id, context, state, app_logger):
 
     fields = [
         {"field": "data.connected", "payload": True},
-        {"field": "data.modelInfo", "payload": g.model_info},
+        {"field": "data.modelInfo", "payload": g.model_info}
     ]
 
     classes_rows = model_classes.generate_rows()

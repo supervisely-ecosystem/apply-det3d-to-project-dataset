@@ -1,5 +1,4 @@
-<sly-card title="Parameters"
-          subtitle="Set inference and saving parameters"
+<sly-card title="Inference settings"
           class="mr15 "
           :class="{'custom-full-height': !state.collapsed4}"
           :options="{collapsable: true}"
@@ -26,13 +25,11 @@
             </sly-field>
 
 
-
-
             <sly-field title="How to add predictions"
                    description="Original annotations are not modified. New project with predictions will be created.">
                 <el-select v-model="state.addMode" style="width: 250px;" :disabled="data.done4" >
-                    <el-option key="merge" label="merge with existing labels" value="merge"></el-option>
                     <el-option key="replace" label="replace existing labels" value="replace"></el-option>
+                    <el-option key="merge" label="merge with existing labels" value="merge"></el-option>
                 </el-select>
             </sly-field>
 
