@@ -31,11 +31,6 @@ Application key points:
 - Works with both separate pointclouds and pointcloud episodes
 - Support 3d tracking
 
-You can try this app on our prepared demo projects with pointcloud episodes:
-
-- [Demo pointcloud episodes](https://ecosystem.supervise.ly/projects/demo-poinctloud-episodes)
-- [Demo pointcloud episodes with labels](https://ecosystem.supervise.ly/projects/demo-poinctloud-episodes-annotated)
-
 # Usage
 
 <a data-key="sly-embeded-video-link" href="https://youtu.be/QThlasFmEUA" data-video-code="QThlasFmEUA">
@@ -62,6 +57,21 @@ You can try this app on our prepared demo projects with pointcloud episodes:
 # Result
 
 <img src="https://github.com/supervisely-ecosystem/apply-det3d-to-project-dataset/releases/download/v0.0.1/result.png" style="width: 100%;"/>
+
+# Related apps
+
+You can try this app on our prepared demo projects with pointcloud episodes ⬇️ 
+  
+- [Demo pointcloud episodes](https://ecosystem.supervise.ly/projects/demo-poinctloud-episodes)
+
+    <img data-key="sly-module-link" data-module-slug="supervisely-ecosystem/demo-poinctloud-episodes" src="https://user-images.githubusercontent.com/48913536/171821238-035ac627-a794-4bd6-8ea2-9392b29adba9.png" width="170px"/>
+
+
+- [Demo pointcloud episodes with labels](https://ecosystem.supervise.ly/projects/demo-poinctloud-episodes-annotated)
+
+    <img data-key="sly-module-link" data-module-slug="supervisely-ecosystem/demo-poinctloud-episodes-annotated" src="https://user-images.githubusercontent.com/48913536/171821464-6e89dc48-c60e-424e-b734-998251911a1e.png" width="350px"/>
+
+   
 
 # Screenshot
 
