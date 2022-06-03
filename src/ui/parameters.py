@@ -4,7 +4,7 @@ import sly_globals as g
 
 def init(data, state):
     state["newProjName"] = f"{g.project_info.name} labeled"
-    state["confThres"] = 0.0
+    state["confThres"] = 0.2
     state["addMode"] = "replace"
     state["collapsed4"] = True
     state["disabled4"] = True
