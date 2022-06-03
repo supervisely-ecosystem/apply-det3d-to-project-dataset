@@ -60,6 +60,9 @@ class PubTracker(object):
                 det['ct'] = np.array(det['translation'][:2])
                 det['z_trans'] = det['translation'][-1]
                 det['tracking'] = np.array(det['velocity'][:2]) * -1 * time_lag
+                # if model is not CenterPoint
+                if len(det['tracking']) == 0:
+                    det['tracking'] = np.zeros((2,)).astype(np.float32)
                 det['label_preds'] = g.gt_labels[det['detection_name']]
                 temp.append(det)
 
@@ -80,7 +83,14 @@ class PubTracker(object):
         item_cat = np.array([item['label_preds'] for item in results], np.int32) # N
         track_cat = np.array([track['label_preds'] for track in self.tracks], np.int32) # M
 
-        max_diff = np.array([self.CLS_VELOCITY_ERROR[box['detection_name']] for box in results], np.float32)
+        error = []
+        for box in results:
+            if box['detection_name'] in self.CLS_VELOCITY_ERROR.keys():
+                error.append(self.CLS_VELOCITY_ERROR[box['detection_name']])
+            else:
+                error.append(5)
+
+        max_diff = np.array(error, np.float32)
 
         tracks = np.array(
             [pre_det['ct'] for pre_det in self.tracks], np.float32) # M x 2
