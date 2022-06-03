@@ -29,7 +29,12 @@ This app provides convenient inference interface for 3d neural networks on point
 Application key points:
 
 - Works with both separate pointclouds and pointcloud episodes
-- Suport 3d tracking
+- Support 3d tracking
+
+You can try this app on our prepared demo projects with pointcloud episodes:
+
+- [Demo pointcloud episodes](https://ecosystem.supervise.ly/projects/demo-poinctloud-episodes)
+- [Demo pointcloud episodes with labels](https://ecosystem.supervise.ly/projects/demo-poinctloud-episodes-annotated)
 
 # Usage
 
