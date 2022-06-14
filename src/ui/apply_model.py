@@ -128,140 +128,122 @@ def apply_model(api: sly.Api, task_id, context, state, app_logger):
             {"field": f"data.progressTotal{name}", "payload": progress.total},
         ]
         api.task.set_fields(task_id, fields)
+
     # Setup new project
+    progress = sly.Progress('Cloning point clouds', 1)
     project_names = [x.name for x in api.project.get_list(g.workspace_id)]
     new_project_name = sly._utils.generate_free_name(used_names=project_names, possible_name=state["newProjName"])
     
-    clone_task_id = api.project.clone(g.project_id, g.workspace_id, new_project_name)
+    clone_with_anns = state["addMode"] == "merge"
+    clone_task_id = api.project.clone_advanced(g.project_id, g.workspace_id, new_project_name, with_annotations=clone_with_anns)
     api.task.wait(clone_task_id, api.task.Status('finished')) # TODO: progress bar for clone
-    
-    base_dataset = api.dataset.get_list(g.project_id)[0]
-    
+    progress.iter_done_report()
+
     new_project = api.project.get_info_by_name(g.workspace_id, new_project_name)
-    new_dataset = api.dataset.get_list(new_project.id)[0] # TODO: only first dataset?
+    new_datasets = api.dataset.get_list(new_project.id)
     
-    # ann_json = api.pointcloud_episode.annotation.download(base_dataset.id)
-    # ann = sly.PointcloudEpisodeAnnotation.from_json(ann_json, g.project_meta, KeyIdMap())
-    # new_ann = ann.clone()
-
-    pointclouds = api.pointcloud.get_list(new_dataset.id)
-    names_to_ptcs = {ptc.name : ptc.id for ptc in pointclouds}
-    names_to_ptcs = OrderedDict(names_to_ptcs.items())
-    names_to_ptcs = OrderedDict(sorted(names_to_ptcs.items(), key=lambda t: t[0]))
-    names_to_ptcs = OrderedDict(sorted(names_to_ptcs.items(), key=lambda t: t[0]))
-    if new_project.type == "point_cloud_episodes":
-        frames_to_ptcs = OrderedDict({i: v for i, v in enumerate(names_to_ptcs.values())})
-        ptcs_to_frames = OrderedDict({v: k for k, v in frames_to_ptcs.items()})
-    pointcloud_ids = list(names_to_ptcs.values())
-
-    # api.pointcloud_episode.annotation.append(new_dataset.id,
-    #                                             new_ann,
-    #                                             frames_to_ptcs,
-    #                                             KeyIdMap())
-
     # update meta
     if state["addMode"] == "merge":
         res_project_meta = g.project_meta.merge(g.model_meta)
     elif state["addMode"] == "replace":
         res_project_meta = g.model_meta
-        # TODO: is it needed?
-        # api.project.update_meta(new_project.id, sly.ProjectMeta().to_json())
 
     api.project.update_meta(new_project.id, res_project_meta.to_json())
+
+    raw_results = {}
+    anns = {}
+    pointcloud_ids = {}
+    frames_to_ptcs = {}
+    ptcs_to_frames = {}
+    progress = sly.Progress("Inference", sum(ds.items_count for ds in new_datasets), need_info_log=True)
+    for dataset in new_datasets:
+        if dataset.id not in raw_results.keys():
+            raw_results[dataset.id] = OrderedDict()
+        if dataset.id not in anns.keys():
+            anns[dataset.id] = OrderedDict()
+        pointclouds = api.pointcloud.get_list(dataset.id)
+        names_to_ptcs = {ptc.name : ptc.id for ptc in pointclouds}
+        names_to_ptcs = OrderedDict(names_to_ptcs.items())
+        names_to_ptcs = OrderedDict(sorted(names_to_ptcs.items(), key=lambda t: t[0]))
+        names_to_ptcs = OrderedDict(sorted(names_to_ptcs.items(), key=lambda t: t[0]))
+        if new_project.type == str(sly.ProjectType.POINT_CLOUD_EPISODES):
+            frames_to_ptcs[dataset.id] = OrderedDict({i: v for i, v in enumerate(names_to_ptcs.values())})
+            ptcs_to_frames[dataset.id] = OrderedDict({v: k for k, v in frames_to_ptcs[dataset.id].items()})
+        pointcloud_ids[dataset.id] = list(names_to_ptcs.values())
+        
+        for ptc_id in pointcloud_ids[dataset.id]:
+            params = {
+                "pointcloud_id": ptc_id,
+                "threshold": state["confThres"],
+                "classes": state["selectedClasses"],
+                "project_type": new_project.type
+            }
+            result = g.api.task.send_request(state['sessionId'], "inference_pointcloud_id", data=params, timeout=120)
+            try:
+                result = result["results"]
+            except KeyError:
+                sly.logger.error("Something goes wrong and responce doesnt contain results")
+                sly.logger.error(f"Results: {result}")
+            raw_results[dataset.id][ptc_id] = result["raw_results"]
+            anns[dataset.id][ptc_id] = result["annotation"]
+            progress.iter_done_report()
+            _update_progress(progress, "Inference")
     
-    progress = sly.Progress("Inference", len(pointcloud_ids), need_info_log=True)
-    raw_results = OrderedDict()
-    anns = OrderedDict()
-    for ptc_id in pointcloud_ids:
-        params = {
-            "pointcloud_id": ptc_id,
-            "threshold": state["confThres"],
-            "classes": state["selectedClasses"],
-            "project_type": new_project.type
-        }
-        result = g.api.task.send_request(state['sessionId'], "inference_pointcloud_id", data=params, timeout=120)
-        try:
-            result = result["results"]
-        except KeyError:
-            sly.logger.error("Something goes wrong and responce doesnt contain results")
-            sly.logger.error(f"Results: {result}")
-        raw_results[ptc_id] = result["raw_results"]
-        anns[ptc_id] = result["annotation"]
-        progress.iters_done_report(1)
-        _update_progress(progress, "Inference")
+    anns_len = sum(ds.items_count for ds in new_datasets) if \
+        new_project.type == str(sly.ProjectType.POINT_CLOUDS) else len(new_datasets)
+    upload_anns_progress = sly.Progress("UploadAnns", anns_len, need_info_log=True)
 
-    api.task.set_field(task_id, "state.uploading", True)
-    if new_project.type == "point_clouds":
-        upload_anns_progress = sly.Progress("UploadAnns", len(pointcloud_ids), need_info_log=True)
+    for dataset in new_datasets:
+        api.task.set_field(task_id, "state.uploading", True)
+        if new_project.type == str(sly.ProjectType.POINT_CLOUDS):
+            for ptc_id in pointcloud_ids[dataset.id]:
+                objects = []
+                figures = []
+                new_ann = sly.PointcloudAnnotation.from_json(anns[dataset.id][ptc_id], res_project_meta)
+                objects.extend([obj for obj in new_ann.objects])
+                figures.extend([fig for fig in new_ann.figures])
+                objects = PointcloudObjectCollection(objects)
+                result_ann = sly.PointcloudAnnotation(objects, figures, VideoTagCollection([]))
+                api.pointcloud.annotation.append(ptc_id, result_ann)
+                upload_anns_progress.iter_done_report()
+                _update_progress(upload_anns_progress, "UploadAnns")
+        elif new_project.type == str(sly.ProjectType.POINT_CLOUD_EPISODES):
+            if state["task"] == "det":
+                objects = []
+                frames = []
 
-        for ptc_id in pointcloud_ids:
-            objects = []
-            figures = []
-            if state["addMode"] == "merge":
-                # TODO: check! (there was bug here)
-                ann_json = api.pointcloud.annotation.download(ptc_id)
-                ann = sly.PointcloudAnnotation.from_json(ann_json, res_project_meta)
-                objects.extend([obj for obj in ann.objects])
-                figures.extend([fig for fig in ann.figures])
-            new_ann = sly.PointcloudAnnotation.from_json(anns[ptc_id], res_project_meta)
-            objects.extend([obj for obj in new_ann.objects])
-            figures.extend([fig for fig in new_ann.figures])
-            objects = PointcloudObjectCollection(objects)
-            result_ann = sly.PointcloudAnnotation(objects, figures, VideoTagCollection([]))
-            api.pointcloud.annotation.append(ptc_id, result_ann)
-            upload_anns_progress.iters_done_report(1)
+                for frame_ind, ptc_id in frames_to_ptcs[dataset.id].items():
+                    ann = sly.PointcloudAnnotation.from_json(anns[dataset.id][ptc_id], res_project_meta)
+                    objects.extend([obj for obj in ann.objects])
+                    figures = ann.figures
+                    frames.append(sly.Frame(frame_ind, figures))
+
+                objects = PointcloudObjectCollection(objects)
+                annotation = sly.PointcloudEpisodeAnnotation(
+                    frames_count=len(anns[dataset.id]),
+                    objects=objects, 
+                    frames=FrameCollection(frames), 
+                    tags=VideoTagCollection([]))
+
+            elif state["task"] == "det_and_track":
+                tracking_preds = track(raw_results[dataset.id])
+                objects, figures = get_objects_and_figures(tracking_preds, res_project_meta)
+                objects = PointcloudObjectCollection(objects)
+                frames = []
+                for ptc_id, figures in figures.items():
+                    frames.append(sly.Frame(ptcs_to_frames[dataset.id][ptc_id], figures))
+                annotation = sly.PointcloudEpisodeAnnotation(
+                    frames_count=len(tracking_preds), 
+                    objects=objects, 
+                    frames=FrameCollection(frames), 
+                    tags=VideoTagCollection([]))
+
+            api.pointcloud_episode.annotation.append(dataset.id,
+                                                    annotation,
+                                                    frames_to_ptcs[dataset.id],
+                                                    KeyIdMap())
+            upload_anns_progress.iter_done_report()
             _update_progress(upload_anns_progress, "UploadAnns")
-    elif new_project.type == "point_cloud_episodes":
-        if state["task"] == "det":
-            objects = []
-            frames = []
-            previous_figures = {}
-            if state["addMode"] == "merge":
-                ann_json = api.pointcloud_episode.annotation.download(base_dataset.id)
-                ann = sly.PointcloudEpisodeAnnotation.from_json(ann_json, res_project_meta, KeyIdMap())
-                objects.extend([obj for obj in ann.objects])
-                for frame in ann.frames:
-                    previous_figures[frame.index] = frame.figures
-
-            for frame_ind, ptc_id in frames_to_ptcs.items():
-                ann = sly.PointcloudAnnotation.from_json(anns[ptc_id], res_project_meta)
-                objects.extend([obj for obj in ann.objects])
-                figures = ann.figures
-                if frame_ind in previous_figures.keys(): # if 'merge' mode
-                    figures.extend(previous_figures[frame_ind])
-                frames.append(sly.Frame(frame_ind, figures))
-
-            objects = PointcloudObjectCollection(objects)
-            annotation = sly.PointcloudEpisodeAnnotation(
-                frames_count=len(anns),
-                objects=objects, 
-                frames=FrameCollection(frames), 
-                tags=VideoTagCollection([]))
-
-        elif state["task"] == "det_and_track":
-            tracking_preds = track(raw_results)
-            objects, figures = get_objects_and_figures(tracking_preds, res_project_meta)
-            if state["addMode"] == "merge":
-                ann_json = api.pointcloud_episode.annotation.download(base_dataset.id)
-                ann = sly.PointcloudEpisodeAnnotation.from_json(ann_json, res_project_meta, KeyIdMap())
-                objects.extend([obj for obj in ann.objects])
-                for frame in ann.frames:
-                    figures[frames_to_ptcs[frame.index]].extend(frame.figures)
-                    
-            objects = PointcloudObjectCollection(objects)
-            frames = []
-            for ptc_id, figures in figures.items():
-                frames.append(sly.Frame(ptcs_to_frames[ptc_id], figures))
-            annotation = sly.PointcloudEpisodeAnnotation(
-                frames_count=len(tracking_preds), 
-                objects=objects, 
-                frames=FrameCollection(frames), 
-                tags=VideoTagCollection([]))
-
-        api.pointcloud_episode.annotation.append(new_dataset.id,
-                                                annotation,
-                                                frames_to_ptcs,
-                                                KeyIdMap())
     
     fields = [
         {"field": "data.resProjectId", "payload": new_project.id},

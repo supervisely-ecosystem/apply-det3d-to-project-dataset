@@ -8,7 +8,7 @@
     "inference interfaces"
   ],
   "description": "Run 3D Detection and tracking algorithm on pointclouds or pointcloud episodes project",
-  "docker_image": "supervisely/base-py-sdk:6.15.0",
+  "docker_image": "supervisely/base-py-sdk:6.22.0",
   "main_script": "src/main.py",
   "gui_template": "src/gui.html",
   "task_location": "workspace_tasks",
@@ -23,5 +23,6 @@
     ],
     "context_root": "Neural Networks"
   },
+  "instance_version": "6.4.57",
   "poster": "https://github.com/supervisely-ecosystem/apply-det3d-to-project-dataset/releases/download/v0.0.1/poster.png"
 }
