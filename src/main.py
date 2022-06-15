@@ -7,7 +7,6 @@ import sly_globals as g
 def main():
     data = {}
     state = {}
-    # data["ownerId"] = g.owner_id
     data["teamId"] = g.team_id
 
     g.my_app.compile_template(g.root_source_path)

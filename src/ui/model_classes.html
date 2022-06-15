@@ -46,8 +46,9 @@
                 style="margin-top: 20px; align-self: flex-start"
                 class="regular"
                 v-if="!data.done3"
+                :disabled="state.selectedClasses.length < 1"
                 @click="command('choose_classes')">
-            SELECT
+            SELECT {{state.selectedClasses.length}} CLASSES
         </el-button>
     </div>
 
