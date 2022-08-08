@@ -1,6 +1,6 @@
 <div align="center" markdown>
 
-<img src="https://github.com/supervisely-ecosystem/apply-det3d-to-project-dataset/releases/download/v0.0.1/poster.png" style="width: 100%;"/>
+<img src="https://user-images.githubusercontent.com/48245050/182627503-8dab4d23-8c6d-43fc-aea7-14abb4a14d03.png"/>
 
 # Apply 3D Detection to Pointcloud Project
 
