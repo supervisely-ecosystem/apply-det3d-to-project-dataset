@@ -17,9 +17,9 @@
 
 
             <sly-field title="Confidence threshold"
-                       description="to filter predictions">
+                       description="to filter predictions by confidence score">
                 <div class="fflex">
-                    <el-input-number v-model="state.confThres" :min="0" :max="1" :step="0.1"
+                    <el-input-number v-model="state.confThres" :min="0" :max="1" :step="0.01"
                                      :disabled="data.done4"></el-input-number>
                 </div>
             </sly-field>
@@ -31,6 +31,51 @@
                     <el-option key="replace" label="replace existing labels" value="replace"></el-option>
                     <el-option key="merge" label="merge with existing labels" value="merge"></el-option>
                 </el-select>
+            </sly-field>
+
+            <sly-field title="Data manipulations for inference" description="Recommended only for advanced users.">
+                <el-checkbox v-model="state.useDefaultInferenceParams" :disabled="data.doneData">Use default data settings (recommended)</el-checkbox>
+                <div v-if="!state.useDefaultInferenceParams">
+                    <sly-field title="Apply sliding window mode">
+                        <sly-field title="INFO:"
+                            description="Description"
+                            style="padding-top: 0; padding-bottom: 0; margin: 10px 5px;">
+                
+                            <sly-icon slot="icon" :options="{ color: '#cece66', bgColor: '#f7f7eb', rounded: false }">
+                                <i class="zmdi zmdi-info"></i>
+                            </sly-icon>
+                        </sly-field>
+                        <div v-for="(coord, i) in data.coords" class="mb5">
+                            <el-checkbox 
+                                @change="state.idx_to_change = i; command('change_sw');" 
+                                v-model="state.applySW[i]" 
+                                :disabled="data.doneData || !state.allowSW[i]"
+                            >
+                                {{ coord }}
+                                <span v-if="!state.allowSW[i]"> (Not available for this model)</span>
+                            </el-checkbox>
+                        </div>
+                    </sly-field>
+                    <sly-field title="Center point clouds">
+                        <sly-field title="INFO:"
+                            description="Description"
+                            style="padding-top: 0; padding-bottom: 0; margin: 10px 5px;">
+                
+                            <sly-icon slot="icon" :options="{ color: '#cece66', bgColor: '#f7f7eb', rounded: false }">
+                                <i class="zmdi zmdi-info"></i>
+                            </sly-icon>
+                        </sly-field>
+                        <div v-for="(coord, i) in data.coords" class="mb5">
+                            <el-checkbox 
+                                v-model="state.applyCenterPTC[i]" 
+                                :disabled="data.doneData || state.disabledCenter[i]"
+                            >
+                                {{ coord }}
+                                <span v-if="state.disabledCenter[i]"> (Not available to change)</span>
+                            </el-checkbox>
+                        </div>
+                    </sly-field>
+                </div>
             </sly-field>
 
 
