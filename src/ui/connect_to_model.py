@@ -49,16 +49,19 @@ def connect(api: sly.Api, task_id, context, state, app_logger):
         {"field": "data.connected", "payload": True},
         {"field": "data.modelInfo", "payload": g.model_info}
     ]
-    applySW = [False, False, False]
-    applyCenterPTC = [False, False, False]
-    allowSW = [False, False, False]
-    disabledCenter = [False, False, False]
+    xyz = ['X', 'Y', 'Z']
+    applySW = {'X': False, 'Y': False, 'Z': False}
+    applyCenterPTC = {'X': False, 'Y': False, 'Z': False}
+    allowSW = {'X': False, 'Y': False, 'Z': False}
+    disabledCenter = {'X': False, 'Y': False, 'Z': False}
     if "ptc_range_centered" in g.model_info.keys() and "train_data_centered" in g.model_info.keys():
-        allowSW = g.model_info["ptc_range_centered"].copy()
+        for i in range(3):
+            allowSW[xyz[i]] = g.model_info["ptc_range_centered"][i]
         
         if g.model_info["train_data_centered"] is not None:
-            applySW = g.model_info["train_data_centered"].copy()
-            applyCenterPTC = g.model_info["train_data_centered"].copy()
+            for i in range(3):
+                applySW[xyz[i]] = g.model_info["train_data_centered"][i]
+                applyCenterPTC[xyz[i]] = g.model_info["train_data_centered"][i]
             disabledCenter = applySW.copy()
 
     fields.extend([

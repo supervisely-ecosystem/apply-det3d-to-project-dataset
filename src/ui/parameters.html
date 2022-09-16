@@ -45,17 +45,18 @@
                                 <i class="zmdi zmdi-info"></i>
                             </sly-icon>
                         </sly-field>
-                        <div v-for="(coord, i) in data.coords" class="mb5">
+                        <div v-for="coord in data.coords" class="mb5">
                             <el-checkbox 
-                                @change="state.idx_to_change = i; command('change_sw');" 
-                                v-model="state.applySW[i]" 
-                                :disabled="data.doneData || !state.allowSW[i]"
+                                @change="state.idx_to_change = coord; command('change_sw');" 
+                                v-model="state.applySW[coord]" 
+                                :disabled="data.doneData || !state.allowSW[coord]"
                             >
                                 {{ coord }}
-                                <span v-if="!state.allowSW[i]"> (Not available for this model)</span>
+                                <span v-if="!state.allowSW[coord]"> (Not available for this model)</span>
                             </el-checkbox>
                         </div>
                     </sly-field>
+
                     <sly-field title="Center point clouds">
                         <sly-field title="INFO:"
                             description="Description"
@@ -65,13 +66,13 @@
                                 <i class="zmdi zmdi-info"></i>
                             </sly-icon>
                         </sly-field>
-                        <div v-for="(coord, i) in data.coords" class="mb5">
+                        <div v-for="coord in data.coords" class="mb5">
                             <el-checkbox 
-                                v-model="state.applyCenterPTC[i]" 
-                                :disabled="data.doneData || state.disabledCenter[i]"
+                                v-model="state.applyCenterPTC[coord]" 
+                                :disabled="data.doneData || state.disabledCenter[coord]"
                             >
                                 {{ coord }}
-                                <span v-if="state.disabledCenter[i]"> (Not available to change)</span>
+                                <span v-if="state.disabledCenter[coord]"> (Not available to change)</span>
                             </el-checkbox>
                         </div>
                     </sly-field>

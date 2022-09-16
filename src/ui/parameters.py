@@ -1,16 +1,16 @@
 import supervisely as sly
 import sly_globals as g
 
-
 def init(data, state):
     state["newProjName"] = f"{g.project_info.name} labeled"
     state["confThres"] = 0.3
     state["addMode"] = "replace"
     state["useDefaultInferenceParams"] = True
-    state["applySW"] = [False, False, False]
-    state["applyCenterPTC"] = [False, False, False]
-    state["allowSW"] = [False, False, False]
-    state["enableCenter"] = [True, True, True]
+    state["applySW"] = {'X': False, 'Y': False, 'Z': False}
+    state["applyCenterPTC"] = {'X': False, 'Y': False, 'Z': False}
+    state["allowSW"] = {'X': False, 'Y': False, 'Z': False}
+    state["disabledCenter"] = {'X': False, 'Y': False, 'Z': False}
+    state["idx_to_change"] = 'X'
     data["coords"] = ["X", "Y", "Z"]
     state["collapsed4"] = True
     state["disabled4"] = True
