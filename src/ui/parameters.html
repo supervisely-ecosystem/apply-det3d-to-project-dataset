@@ -36,15 +36,13 @@
             <sly-field title="Data manipulations for inference" description="Recommended only for advanced users.">
                 <el-checkbox v-model="state.useDefaultInferenceParams" :disabled="data.doneData">Use default data settings (recommended)</el-checkbox>
                 <div v-if="!state.useDefaultInferenceParams">
-                    <sly-field title="Apply sliding window mode">
-                        <sly-field title="INFO:"
-                            description="Description"
-                            style="padding-top: 0; padding-bottom: 0; margin: 10px 5px;">
-                
-                            <sly-icon slot="icon" :options="{ color: '#cece66', bgColor: '#f7f7eb', rounded: false }">
-                                <i class="zmdi zmdi-info"></i>
-                            </sly-icon>
-                        </sly-field>
+                    <sly-field title="Apply sliding window mode"
+                               description="Input point clouds will be splitted and the model 
+                                            will be applied to each slide without overlaps. 
+                                            Finally all labels will be joined and placed 
+                                            on whole point clouds. Sliding window size will 
+                                            be equal to point cloud range of the model 
+                                            (see config.py).">
                         <div v-for="coord in data.coords" class="mb5">
                             <el-checkbox 
                                 @change="state.idx_to_change = coord; command('change_sw');" 
@@ -57,15 +55,10 @@
                         </div>
                     </sly-field>
 
-                    <sly-field title="Center point clouds">
-                        <sly-field title="INFO:"
-                            description="Description"
-                            style="padding-top: 0; padding-bottom: 0; margin: 10px 5px;">
-                
-                            <sly-icon slot="icon" :options="{ color: '#cece66', bgColor: '#f7f7eb', rounded: false }">
-                                <i class="zmdi zmdi-info"></i>
-                            </sly-icon>
-                        </sly-field>
+                    <sly-field title="Center point clouds"
+                               description="Center all input point clouds to symmetric range for inference.  
+                                            It's recommended to center point clouds if the model
+                                            trained on centered data.">
                         <div v-for="coord in data.coords" class="mb5">
                             <el-checkbox 
                                 v-model="state.applyCenterPTC[coord]" 
