@@ -17,9 +17,9 @@
 
 
             <sly-field title="Confidence threshold"
-                       description="to filter predictions">
+                       description="to filter predictions by confidence score">
                 <div class="fflex">
-                    <el-input-number v-model="state.confThres" :min="0" :max="1" :step="0.1"
+                    <el-input-number v-model="state.confThres" :min="0" :max="1" :step="0.01"
                                      :disabled="data.done4"></el-input-number>
                 </div>
             </sly-field>
@@ -31,6 +31,45 @@
                     <el-option key="replace" label="replace existing labels" value="replace"></el-option>
                     <el-option key="merge" label="merge with existing labels" value="merge"></el-option>
                 </el-select>
+            </sly-field>
+
+            <sly-field title="Data manipulations for inference" description="Recommended only for advanced users.">
+                <el-checkbox v-model="state.useDefaultInferenceParams" :disabled="data.doneData">Use default data settings (recommended)</el-checkbox>
+                <div v-if="!state.useDefaultInferenceParams">
+                    <sly-field title="Apply sliding window mode"
+                               description="Input point clouds will be splitted and the model 
+                                            will be applied to each slide without overlaps. 
+                                            Finally all labels will be joined and placed 
+                                            on whole point clouds. Sliding window size will 
+                                            be equal to point cloud range of the model 
+                                            (see config.py).">
+                        <div v-for="coord in data.coords" class="mb5">
+                            <el-checkbox 
+                                @change="state.idx_to_change = coord; command('change_sw');" 
+                                v-model="state.applySW[coord]" 
+                                :disabled="data.doneData || !state.allowSW[coord]"
+                            >
+                                {{ coord }}
+                                <span v-if="!state.allowSW[coord]"> (Not available for this model)</span>
+                            </el-checkbox>
+                        </div>
+                    </sly-field>
+
+                    <sly-field title="Center point clouds"
+                               description="Center all input point clouds to symmetric range for inference.  
+                                            It's recommended to center point clouds if the model
+                                            trained on centered data.">
+                        <div v-for="coord in data.coords" class="mb5">
+                            <el-checkbox 
+                                v-model="state.applyCenterPTC[coord]" 
+                                :disabled="data.doneData || state.disabledCenter[coord]"
+                            >
+                                {{ coord }}
+                                <span v-if="state.disabledCenter[coord]"> (Not available to change)</span>
+                            </el-checkbox>
+                        </div>
+                    </sly-field>
+                </div>
             </sly-field>
 
 

@@ -49,6 +49,27 @@ def connect(api: sly.Api, task_id, context, state, app_logger):
         {"field": "data.connected", "payload": True},
         {"field": "data.modelInfo", "payload": g.model_info}
     ]
+    xyz = ['X', 'Y', 'Z']
+    applySW = {'X': False, 'Y': False, 'Z': False}
+    applyCenterPTC = {'X': False, 'Y': False, 'Z': False}
+    allowSW = {'X': False, 'Y': False, 'Z': False}
+    disabledCenter = {'X': False, 'Y': False, 'Z': False}
+    if "ptc_range_centered" in g.model_info.keys() and "train_data_centered" in g.model_info.keys():
+        for i in range(3):
+            allowSW[xyz[i]] = g.model_info["ptc_range_centered"][i]
+        
+        if g.model_info["train_data_centered"] is not None:
+            for i in range(3):
+                applySW[xyz[i]] = g.model_info["train_data_centered"][i]
+                applyCenterPTC[xyz[i]] = g.model_info["train_data_centered"][i]
+            disabledCenter = applySW.copy()
+
+    fields.extend([
+        {"field": "state.applySW", "payload": applySW},
+        {"field": "state.applyCenterPTC", "payload": applyCenterPTC},
+        {"field": "state.allowSW", "payload": allowSW},
+        {"field": "state.disabledCenter", "payload": disabledCenter},
+    ])
 
     classes_rows = model_classes.generate_rows()
     model_classes.fill_table(classes_rows)

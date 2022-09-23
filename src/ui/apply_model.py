@@ -176,14 +176,19 @@ def apply_model(api: sly.Api, task_id, context, state, app_logger):
                 "pointcloud_id": ptc_id,
                 "threshold": state["confThres"],
                 "classes": state["selectedClasses"],
-                "project_type": new_project.type
+                "project_type": new_project.type,
+                "apply_sliding_window": state["applySW"],
+                "center_ptc": state["applyCenterPTC"]
             }
             result = g.api.task.send_request(state['sessionId'], "inference_pointcloud_id", data=params, timeout=120)
-            try:
-                result = result["results"]
-            except KeyError:
-                sly.logger.error("Something goes wrong and responce doesnt contain results")
-                sly.logger.error(f"Results: {result}")
+            if "error" in result.keys():
+                fields = [
+                    {"field": "data.started", "payload": False},
+                    {"field": "state.uploading", "payload": False}
+                ]
+                api.task.set_fields(task_id, fields)
+                raise RuntimeError("Serving app failed: "+result["error"])
+            result = result["results"]
             raw_results[dataset.id][ptc_id] = result["raw_results"]
             anns[dataset.id][ptc_id] = result["annotation"]
             progress.iter_done_report()
