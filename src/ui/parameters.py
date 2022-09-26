@@ -32,7 +32,7 @@ def change_sw(api: sly.Api, task_id, context, state, app_logger):
         if g.model_info["train_data_centered"] is None:
             val_for_center = False
         else:
-            val_for_center = g.model_info["train_data_centered"][state["idx_to_change"]]
+            val_for_center = g.model_info["train_data_centered"][['X', 'Y', 'Z'].index(state["idx_to_change"])]
     fields = [
         {"field": f"state.applyCenterPTC[{state['idx_to_change']}]", "payload": val_for_center},
         {"field": f"state.disabledCenter[{state['idx_to_change']}]", "payload": disable_val},
