@@ -27,6 +27,7 @@ def init(data, state):
 
     data["resProjectId"] = None
     data["resProjectName"] = None
+    data["resProjectPreviewUrl"] = g.project_info.image_preview_url
     data["started"] = False
     init_progress(data, "Inference")
     init_progress(data, "UploadAnns")
@@ -46,7 +47,7 @@ def get_cuboids_from_predictions(labels, reverse=False):
         z = l["z_trans"]
         dx, dy, dz = l["size"][0], l["size"][1], l["size"][2]
         yaw = l["rotation"]
-        position = Vector3d(float(x), float(y), float(z * 0.5))
+        position = Vector3d(float(x), float(y), float(z))
 
         if reverse:
             yaw = turn_around(yaw)

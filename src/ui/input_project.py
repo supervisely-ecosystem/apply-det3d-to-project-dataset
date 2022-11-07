@@ -5,7 +5,7 @@ def init(data, state):
     data["projectName"] = g.project_info.name
     data["projectItemsCount"] = g.project_info.items_count
     data["projectType"] = g.project_info.type
-    #data["projectPreviewUrl"] = ??? TODO: preview
+    data["projectPreviewUrl"] = g.project_info.image_preview_url
 
     data["done1"] = False
     state["collapsed1"] = False
