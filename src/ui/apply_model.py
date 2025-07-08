@@ -9,6 +9,7 @@ from supervisely.geometry.cuboid_3d import Cuboid3d, Vector3d
 from tracker import PubTracker as Tracker
 import os
 import numpy as np
+from utils import clone_project
 
 
 def init_progress(data, name):
@@ -117,7 +118,6 @@ def track(predictions):
 
     return result
 
-
 @g.my_app.callback("apply_model")
 @sly.timeit
 @g.my_app.ignore_errors_and_show_dialog_window()
@@ -131,16 +131,18 @@ def apply_model(api: sly.Api, task_id, context, state, app_logger):
         api.task.set_fields(task_id, fields)
 
     # Setup new project
-    progress = sly.Progress('Cloning point clouds', 1)
-    project_names = [x.name for x in api.project.get_list(g.workspace_id)]
-    new_project_name = sly._utils.generate_free_name(used_names=project_names, possible_name=state["newProjName"])
-    
-    clone_with_anns = state["addMode"] == "merge"
-    clone_task_id = api.project.clone_advanced(g.project_id, g.workspace_id, new_project_name, with_annotations=clone_with_anns)
-    api.task.wait(clone_task_id, api.task.Status('finished')) # TODO: progress bar for clone
+    progress = sly.Progress(f'Cloning {g.project_info.type} project', 1)
+    new_project = clone_project(
+        api, 
+        g.workspace_id, 
+        g.project_id, 
+        g.project_info.type,
+        g.project_meta, 
+        state["newProjName"], 
+        state["addMode"] == "merge"
+    )
     progress.iter_done_report()
 
-    new_project = api.project.get_info_by_name(g.workspace_id, new_project_name)
     new_datasets = api.dataset.get_list(new_project.id)
     
     # update meta
