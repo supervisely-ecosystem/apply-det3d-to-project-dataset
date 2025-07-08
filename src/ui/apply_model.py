@@ -132,6 +132,7 @@ def apply_model(api: sly.Api, task_id, context, state, app_logger):
 
     # Setup new project
     progress = sly.Progress(f'Cloning {g.project_info.type} project', 1)
+    sly.logger.info(f"Cloning {g.project_info.type} project")
     new_project = clone_project(
         api, 
         g.workspace_id, 
@@ -141,6 +142,7 @@ def apply_model(api: sly.Api, task_id, context, state, app_logger):
         state["newProjName"], 
         state["addMode"] == "merge"
     )
+    sly.logger.info(f"New project: '{new_project.name}' created")
     progress.iter_done_report()
 
     new_datasets = api.dataset.get_list(new_project.id)
