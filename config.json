@@ -8,7 +8,7 @@
     "inference interfaces"
   ],
   "description": "Run 3D Detection and tracking algorithm on pointclouds or pointcloud episodes project",
-  "docker_image": "supervisely/base-py-sdk:6.72.182",
+  "docker_image": "supervisely/base-py-sdk:6.73.394",
   "main_script": "src/main.py",
   "gui_template": "src/gui.html",
   "task_location": "workspace_tasks",

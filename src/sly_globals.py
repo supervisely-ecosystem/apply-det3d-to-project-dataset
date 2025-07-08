@@ -19,9 +19,13 @@ sys.path.append(ui_sources_dir)
 
 # @TODO: for debug
 debug_env_path = os.path.join(root_source_path, "debug.env")
-secret_debug_env_path = os.path.join(root_source_path, "secret_debug.env")
-load_dotenv(debug_env_path)
-load_dotenv(secret_debug_env_path, override=True)
+# secret_debug_env_path = os.path.join(root_source_path, "secret_debug.env")
+# load_dotenv(debug_env_path)
+# load_dotenv(secret_debug_env_path, override=True)
+if sly.is_development():
+    load_dotenv(debug_env_path)
+    load_dotenv(os.path.expanduser("~/supervisely.env"))
+
 
 # owner_id = int(os.environ['context.userId'])
 team_id = int(os.environ['context.teamId'])
