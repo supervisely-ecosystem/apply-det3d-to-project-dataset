@@ -43,7 +43,7 @@ def connect(api: sly.Api, task_id, context, state, app_logger):
         ]
         g.api.app.set_fields(g.task_id, fields)
         app_logger.debug(ex)
-        raise ConnectionError(f'cannot establish connection with model {state["sessionId"]}')
+        raise ConnectionError(f"Can't establish connection with model: '{state["sessionId"]}'. Make sure that model is deployed in the serving app.")
 
     fields = [
         {"field": "data.connected", "payload": True},
