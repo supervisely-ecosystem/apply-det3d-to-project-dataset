@@ -15,7 +15,7 @@
 </p>
 
 
-[![](https://img.shields.io/badge/supervisely-ecosystem-brightgreen)](https://ecosystem.supervisely.com/apps/supervisely-ecosystem/apply-det3d-to-project-dataset)
+[![](https://img.shields.io/badge/supervisely-ecosystem-brightgreen)](../../../../supervisely-ecosystem/apply-det3d-to-project-dataset)
 [![](https://img.shields.io/badge/slack-chat-green.svg?logo=slack)](https://supervisely.com/slack)
 ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/supervisely-ecosystem/apply-det3d-to-project-dataset)
 [![views](https://app.supervisely.com/img/badges/views/supervisely-ecosystem/apply-det3d-to-project-dataset.png)](https://supervisely.com)
@@ -43,7 +43,7 @@ Application key points:
 # How To Run
 **Step 0.** Please make sure that you deployed 3d detection model using corresponding serving app. Learn more in ecosystem …
 
-**Step 1.** Add [Apply 3D Detection to Pointcloud Project](https://ecosystem.supervisely.com/apps/supervisely-ecosystem/apply-det3d-to-project-dataset) application to your Team
+**Step 1.** Add [Apply 3D Detection to Pointcloud Project](../../../../supervisely-ecosystem/apply-det3d-to-project-dataset) application to your Team
 
 <img data-key="sly-module-link" data-module-slug="supervisely-ecosystem/apply-det-and-cls-models-to-project" src="https://github.com/supervisely-ecosystem/apply-det3d-to-project-dataset/releases/download/v0.0.1/thumb.png" width="550px"/>
 
