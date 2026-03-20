@@ -30,6 +30,7 @@ def init(data, state):
     data["resProjectName"] = None
     data["resProjectPreviewUrl"] = g.project_info.image_preview_url
     data["started"] = False
+    data["progressInferenceLabel"] = "Object detection from point clouds"
     init_progress(data, "Inference")
     init_progress(data, "UploadAnns")
 
@@ -136,14 +137,17 @@ def apply_model(api: sly.Api, task_id, context, state, app_logger):
 
     def _filter_annotation(ann_json, meta):
         ann = sly.PointcloudAnnotation.from_json(ann_json, meta)
-        filtered_figures = [fig for fig in ann.figures if fig.obj.obj_class.name in selected_classes]
-        filtered_objects = PointcloudObjectCollection([fig.obj for fig in filtered_figures])
+        filtered_figures = [
+            fig for fig in ann.figures if fig.parent_object.obj_class.name in selected_classes
+        ]
+        filtered_objects = PointcloudObjectCollection([fig.parent_object for fig in filtered_figures])
         return sly.PointcloudAnnotation(filtered_objects, filtered_figures, VideoTagCollection([]))
 
     api.task.set_fields(task_id, [
         {"field": "data.started", "payload": True},
         {"field": "data.done5", "payload": False},
         {"field": "state.uploading", "payload": False},
+        {"field": "data.progressInferenceLabel", "payload": f"Cloning '{g.project_info.name}' project"},
         {"field": "data.progressInference", "payload": 0},
         {"field": "data.progressCurrentInference", "payload": 0},
         {"field": "data.progressTotalInference", "payload": 0},
@@ -153,7 +157,8 @@ def apply_model(api: sly.Api, task_id, context, state, app_logger):
     ])
 
     try:
-        progress = sly.Progress(f'Cloning {g.project_info.type} project', 1)
+        progress = sly.Progress(f"Cloning '{g.project_info.name}' project", 1)
+        _update_progress(progress, "Inference")
         sly.logger.info(f"Cloning {g.project_info.type} project")
         new_project = clone_project(
             api,
@@ -166,6 +171,7 @@ def apply_model(api: sly.Api, task_id, context, state, app_logger):
         )
         sly.logger.info(f"New project: '{new_project.name}' created")
         progress.iter_done_report()
+        _update_progress(progress, "Inference")
 
         new_datasets = api.dataset.get_list(new_project.id)
 
@@ -181,7 +187,9 @@ def apply_model(api: sly.Api, task_id, context, state, app_logger):
         pointcloud_ids = {}
         frames_to_ptcs = {}
         ptcs_to_frames = {}
+        api.task.set_field(task_id, "data.progressInferenceLabel", "Object detection from point clouds")
         progress = sly.Progress("Inference", sum(ds.items_count for ds in new_datasets), need_info_log=True)
+        _update_progress(progress, "Inference")
         for dataset in new_datasets:
             raw_results[dataset.id] = OrderedDict()
             anns[dataset.id] = OrderedDict()
@@ -234,8 +242,10 @@ def apply_model(api: sly.Api, task_id, context, state, app_logger):
 
                     for frame_ind, ptc_id in frames_to_ptcs[dataset.id].items():
                         ann = sly.PointcloudAnnotation.from_json(anns[dataset.id][ptc_id], res_project_meta)
-                        figures = [fig for fig in ann.figures if fig.obj.obj_class.name in selected_classes]
-                        objects.extend(fig.obj for fig in figures)
+                        figures = [
+                            fig for fig in ann.figures if fig.parent_object.obj_class.name in selected_classes
+                        ]
+                        objects.extend(fig.parent_object for fig in figures)
                         frames.append(sly.Frame(frame_ind, figures))
 
                     objects = PointcloudObjectCollection(objects)

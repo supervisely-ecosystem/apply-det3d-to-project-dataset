@@ -30,7 +30,7 @@
 
     <div class="fflex" v-if="data.started">
         <div style="color: #20a0ff" class="mr5">
-            Object detection from point clouds: 
+            {{data.progressInferenceLabel}}:
         </div>
         <el-progress :percentage="data.progressInference" style="flex: 1"></el-progress>
         <div class="ml10" style="flex: none;">[{{data.progressCurrentInference}} / {{data.progressTotalInference}}]</div>
