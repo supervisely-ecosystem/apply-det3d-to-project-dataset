@@ -23,19 +23,19 @@
         class="mb10"
         :loading="!!data.started" 
         v-if="!data.done5 && !data.resProjectId" 
-        @click="data.started = true; command('apply_model')"
+        @click="command('apply_model')"
     >
         <i class="zmdi zmdi-fire" style="margin-right: 5px"></i> Apply model to input data
     </el-button>
 
     <div class="fflex" v-if="data.started">
         <div style="color: #20a0ff" class="mr5">
-            Object detection from point clouds: 
+            {{data.progressInferenceLabel}}:
         </div>
         <el-progress :percentage="data.progressInference" style="flex: 1"></el-progress>
         <div class="ml10" style="flex: none;">[{{data.progressCurrentInference}} / {{data.progressTotalInference}}]</div>
     </div>
-    <div class="fflex mt10" v-if="state.uploading && data.projectType == 'point_clouds'">
+    <div class="fflex mt10" v-if="state.uploading">
         <div style="color: #20a0ff" class="mr5">
             Uploading annotations to Supervisely: 
         </div>
