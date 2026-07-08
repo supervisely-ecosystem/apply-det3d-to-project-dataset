@@ -2,7 +2,7 @@
 
 <img src="https://user-images.githubusercontent.com/48245050/182627503-8dab4d23-8c6d-43fc-aea7-14abb4a14d03.png"/>
 
-# Apply 3D Detection to Pointcloud Project
+# Apply 3D Detection to Point Cloud Project
 
 <p align="center">
   <a href="#Overview">Overview</a> •
@@ -25,11 +25,11 @@
 
 # Overview
 
-This app provides convenient inference interface for 3d neural networks on pointclouds. Just connect to your deployed model, select model classes and model predictions will be saved to a new project. 
+This app provides convenient inference interface for 3d neural networks on point clouds. Just connect to your deployed model, select model classes and model predictions will be saved to a new project. 
 
 Application key points:
 
-- Works with both separate pointclouds and pointcloud episodes
+- Works with both separate point clouds and point cloud episodes
 - Support 3d tracking
 
 # Usage
@@ -43,11 +43,11 @@ Application key points:
 # How To Run
 **Step 0.** Please make sure that you deployed 3d detection model using corresponding serving app. Learn more in ecosystem …
 
-**Step 1.** Add [Apply 3D Detection to Pointcloud Project](https://ecosystem.supervisely.com/apps/supervisely-ecosystem/apply-det3d-to-project-dataset) application to your Team
+**Step 1.** Add [Apply 3D Detection to Point Cloud Project](https://ecosystem.supervisely.com/apps/supervisely-ecosystem/apply-det3d-to-project-dataset) application to your Team
 
 <img data-key="sly-module-link" data-module-slug="supervisely-ecosystem/apply-det-and-cls-models-to-project" src="https://github.com/supervisely-ecosystem/apply-det3d-to-project-dataset/releases/download/v0.0.1/thumb.png" width="550px"/>
 
-**Step 2.** Launch from Pointcloud Project's context menu
+**Step 2.** Launch from Point Cloud Project's context menu
 
 <img src="https://github.com/supervisely-ecosystem/apply-det3d-to-project-dataset/releases/download/v0.0.1/runapp.png" style="width: 100%;"/>
 
