@@ -1,13 +1,14 @@
 {
-  "name": "Apply 3D Detection to Pointcloud Project",
+  "name": "Apply 3D Detection to Point Cloud Project",
   "type": "app",
   "categories": [
     "neural network",
     "pointclouds",
+    "episodes",
     "detection & tracking",
     "inference interfaces"
   ],
-  "description": "Run 3D Detection and tracking algorithm on pointclouds or pointcloud episodes project",
+  "description": "Run 3D Detection and tracking algorithm on point clouds or point cloud episodes project",
   "docker_image": "supervisely/base-py-sdk:6.73.564",
   "main_script": "src/main.py",
   "gui_template": "src/gui.html",
