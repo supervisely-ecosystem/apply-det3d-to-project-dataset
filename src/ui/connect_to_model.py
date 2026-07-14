@@ -4,6 +4,7 @@ import model_classes
 
 def init(data, state):
     state["connectionLoading"] = False
+    state["sessionId"] = None
     data["modelInfo"] = {}
     data["connected"] = False
     data["connectionError"] = ""
